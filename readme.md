@@ -17,3 +17,5 @@
 #### bcryptjs – Used to hash (encrypt) user passwords securely.
 
 #### dotenv – Used to configure environment variables in the server using the .env file.
+
+- **Node.js**
