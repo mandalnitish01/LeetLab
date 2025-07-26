@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import authRoutes from "./routes/auth.routes.js";
+import cookParser from "cookie-parser";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -11,7 +12,9 @@ app.get("/", (req, res) => {
 });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookParser());
 
+// Auth routes
 app.use("/api/v1/auth", authRoutes);
 
 app.listen(PORT, () => {

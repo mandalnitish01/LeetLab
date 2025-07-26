@@ -1,24 +1,150 @@
-import bcrypt from 'bcryptjs';
-import {db} from '../libs/db.js'
+import bcrypt from "bcryptjs";
+import { db } from "../libs/db.js";
+import { UserRole } from "../generated/prisma/index.js";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-    const { email, password , name } = req.body;
+  const { email, password, name } = req.body;
 
-    try {
-        const existingUser = await db.user.findUnique({
-            where: { email }
-        })
+  try { 
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
 
-        if( existingUser ) {
-            return res.status(400).json({ message: 'User already exists' });
-        }
-    } catch (error) {
-        
+    if (existingUser) {
+      return res.status(400).json({ error: "User already exists" });
     }
-}   
-export const login = async (req, res) => {}   
-export const logout = async (req, res) => {}   
-export const check = async (req, res) => {}   
+    //hash the password  10 round hashing
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+//create a new user if the user does not exist
+    const newUser = await db.user.create({
+      data: {
+        email,      
+        password: hashedPassword,
+        name,
+        role: UserRole.USER, // Default role
+      },
+    });
+console.log(newUser);
+    // Generate JWT token
+    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
+    // Set cookie with token
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    });
+    // Respond with user data
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: newUser.id,
+        email: newUser.email, 
+        name: newUser.name,
+        role: newUser.role,
+        image: newUser.image
+      },
+    });
+    //201 for created
+    //200 for success ok
 
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Error creating user" });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+  try {
+    const user = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Invalid email or password" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    // Set cookie with token
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    // Respond with user data
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Error logging in" });
+  }
+};
+export const logout = async (req, res) => {
+  try {
+    // Clear the cookie
+    res.clearCookie("token");
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ error: "Error logging out" });
+  }
+};
+export const check = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await db.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    // Respond with user data
+    res.status(200).json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+      },
+    });
+  } catch (error) {
+    console.error("Check error:", error);
+    res.status(500).json({ error: "Error checking authentication" });
+  }
+};
