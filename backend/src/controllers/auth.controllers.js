@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     });
 console.log(newUser);
     // Generate JWT token
-    const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET,
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -64,11 +64,11 @@ export const login = async (req, res) => {
   console.log(email, password);
   try {
     const user = await db.user.findUnique({
-      where: { email },
+      where: { email }
     });
 
     if (!user) {
-      return res.status(400).json({ error: "Invalid email or password" });
+      return res.status(400).json({ error: "User not found" });
     }
 
     // Verify password
@@ -78,12 +78,12 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
     // Set cookie with token
-    res.cookie("token", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "strict",
       secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
@@ -92,7 +92,8 @@ export const login = async (req, res) => {
 
     // Respond with user data
     res.status(200).json({
-      message: "Login successful",
+      success: true,
+      message: "User Login successful",
       user: {
         id: user.id,
         email: user.email,
@@ -109,42 +110,29 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     // Clear the cookie
-    res.clearCookie("token");
-    res.status(200).json({ message: "Logout successful" });
+    res.clearCookie("jwt",{
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
+    });
+    res.status(200).json({ success: true, message: "Logout successful" });
   } catch (error) {
     console.error("Logout error:", error);
     res.status(500).json({ error: "Error logging out" });
   }
 };
 export const check = async (req, res) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await db.user.findUnique({
-      where: { id: decoded.userId },
-    });
-
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    // Respond with user data
-    res.status(200).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        image: user.image,
-      },
-    });
-  } catch (error) {
-    console.error("Check error:", error);
-    res.status(500).json({ error: "Error checking authentication" });
-  }
+  // console.log("Ckeck user : ", req.user);
+  // This middleware is used to check if the user is authenticated
+  // and to return the user information if authenticated.
+ try {
+  res.status(200).json({
+    success: true,
+    user: req.user, // User info attached by authMiddleware
+  });
+  
+ } catch (error) {
+   console.error("Check error:", error);
+   res.status(500).json({ error: "Error checking authentication" });
+ }
 };
