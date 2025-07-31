@@ -18,5 +18,6 @@
 
 #### dotenv – Used to configure environment variables in the server using the .env file.
 
-//install docker and docker compose
- also install judge0 for validation and check
+
+### installed
+## install docker and docker compose also install judge0 for validation and check
