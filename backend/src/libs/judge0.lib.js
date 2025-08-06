@@ -1,11 +1,12 @@
 export const getJudge0LanguageId = (language) => {
     const languageMap = {
-        'python': 34,
-        'javascript': 63,
-        'java': 62,
-        'c++': 54}
+        'PYTHON': 34,
+        'JAVASCRIPT': 63,
+        'JAVA': 62,
+        'C++': 54
+    };
     return languageMap[language.toUpperCase()];
-}
+};
 
 export const submitBatch = async (submissions) => {
     const {data} = await axios.post(`${process.env.JUDGE0_API_URL}submissions/batch?base64_encoded=false`, {

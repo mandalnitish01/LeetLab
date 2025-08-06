@@ -4,13 +4,12 @@ import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
-  const { email, password, name } = req.body;
-
+  const { email, password, name ,image,role} = req.body;
+console.log(req.body)
   try { 
     const existingUser = await db.user.findUnique({
       where: { email },
     });
-
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
@@ -23,16 +22,18 @@ export const register = async (req, res) => {
         email,      
         password: hashedPassword,
         name,
-        role: UserRole.USER, // Default role
+        role: role || UserRole.USER, // Default role
+        image: image || null, // Optional image field
       },
     });
-console.log(newUser);
+console.log("Newly created user ",newUser);
     // Generate JWT token
     const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
-
+    console.log("Generated JWT token: ", token);
     // Set cookie with token
+
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "strict",
