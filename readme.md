@@ -21,3 +21,5 @@
 
 ### installed
 ## install docker and docker compose also install judge0 for validation and check
+
+npx prisma studio
