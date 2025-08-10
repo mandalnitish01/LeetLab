@@ -61,13 +61,13 @@ export const createProblem = async (req, res) => {
       });
       //extract all the submission results tokens
       const submissionResults = await submitBatch(submissions);
-      // console.log("submission Results data " , submissionResults)
+      console.log("submission Results data " , submissionResults)
       //get all the tokens from the submission results
       const tokens = submissionResults.map((res) => res.token);
-      // console.log("Token for checking the results", tokens)
+      console.log("Token for checking the results", tokens)
       //create a pooling of the problem with the tokens
       const results = await pollBatchResults(tokens);
-      // console.log("result after polling", results)
+      console.log("result after polling", results)
 
       //Check if the submission was successful
       //   for (let i = 0; i < results.length; i++) {
@@ -84,19 +84,19 @@ export const createProblem = async (req, res) => {
       //   }
       for (let i = 0; i < results.length; i++) {
         const result = results[i];
-        // console.log("result-----------", result);
-        // const expectedOutput = testCases[i].output.trim();
-        // const actualOutput = result.stdout?.trim();
+        console.log("result-----------", result);
+        const expectedOutput = testCases[i].output.trim();
+        const actualOutput = result.stdout?.trim();
 
-        // console.log(`--- Test Case ${i + 1} ---`);
-        // console.log("Expected:", JSON.stringify(expectedOutput));
-        // console.log("Actual  :", JSON.stringify(actualOutput));
+        console.log(`--- Test Case ${i + 1} ---`);
+        console.log("Expected:", JSON.stringify(expectedOutput));
+        console.log("Actual  :", JSON.stringify(actualOutput));
 
         if (result.status.id !== 3 || actualOutput !== expectedOutput) {
           return res.status(400).json({
             error: `Test case ${i + 1} failed for language ${language}`,
-            // actual: actualOutput,
-            // expected: expectedOutput,
+            actual: actualOutput,
+            expected: expectedOutput,
           });
         }
       }

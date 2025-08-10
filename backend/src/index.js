@@ -7,7 +7,7 @@ import cookParser from "cookie-parser";
 //imported all routes
 import authRoutes from "./routes/auth.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
-
+import executionRoutes from "./routes/executeCode.routes.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -21,6 +21,7 @@ app.use(cookParser());
 // Auth routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/problems", problemRoutes);
+app.use("/api/v1/execute-code", executionRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
