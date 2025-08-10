@@ -23,3 +23,9 @@
 ## install docker and docker compose also install judge0 for validation and check
 
 npx prisma studio
+- These four schema is used in User
+Problem
+Submission
+TestCaseResult
+ProblemSolved  this project
+
