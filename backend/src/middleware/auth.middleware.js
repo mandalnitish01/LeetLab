@@ -29,7 +29,7 @@ export const authMiddleware = async (req, res, next) => {
             image: true,
         }
     });
-    console.log("Authmiddleware user : ",user)
+    // console.log("Authmiddleware user : ",user)
 
     if (!user) {
         return res.status(404).json({ error: "Unauthorized - User not found" });

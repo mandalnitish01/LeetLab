@@ -127,9 +127,32 @@ export const check = async (req, res) => {
   // This middleware is used to check if the user is authenticated
   // and to return the user information if authenticated.
  try {
+  const token = req.cookies.jwt;
+  if (!token) {
+    return res.status(401).json({ success:false,message: "Unauthorized - No token found" });
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const user = await db.User.findUnique({
+    where:{
+      id:decoded.id
+    },
+    select:{
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      image: true
+    },
+  })
+  if(!user){
+    return res.status(401).json({ success:false,message: "Unauthorized - User not found" });
+  }
+  // req.user = user;
   res.status(200).json({
     success: true,
     user: req.user, // User info attached by authMiddleware
+    user,
   });
   
  } catch (error) {
