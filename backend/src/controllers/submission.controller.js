@@ -1,4 +1,4 @@
-import {} from '../libs/db.js'
+import {db} from '../libs/db.js'
 
 export const getAllSubmission = async(req, res)=>{
     try {
@@ -40,6 +40,7 @@ export const getAllTheSubmissionsForProblem = async(req, res)=>{
     try {
         const problemId = req.params.problemId;
         const submission = await db.submission.count({
+            //implement change for future
             where:{
                 problemId:problemId
             }

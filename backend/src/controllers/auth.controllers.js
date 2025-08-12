@@ -134,6 +134,7 @@ export const check = async (req, res) => {
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const user = await db.User.findUnique({
+    //implement change for future
     where:{
       id:decoded.id
     },
