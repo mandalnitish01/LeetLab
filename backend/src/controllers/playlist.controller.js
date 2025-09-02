@@ -30,7 +30,27 @@ export const createPlaylist = async (req, res) => {
   }
 };
 export const getAllListDetails = async (req, res) => {
-  
+  try {
+    const playlists = await db.playlist.findMany({
+      where:{
+        userId:req.user.id
+      },
+      include:{
+        problems:{
+          include:{
+            problem:true
+          }
+        }
+      }
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Playlists Fetched Successfully",
+      playlists,
+    });
+  } catch (error) {
+    
+  }
 };
 export const getPlayListDetails = async (req, res) => {};
 export const addProblemToPlaylist = async (req, res) => {};
