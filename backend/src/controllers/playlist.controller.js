@@ -1,6 +1,7 @@
 import db from "../utils/db.server.js";
 import { deletePlaylist } from './playlist.controller';
 
+//create playlist
 export const createPlaylist = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -30,6 +31,7 @@ export const createPlaylist = async (req, res) => {
     return res.status(500).json({ error: "Error While Creating Playlist" });
   }
 };
+//get all playlists of user with problems
 export const getAllListDetails = async (req, res) => {
   try {
     const playlists = await db.playlist.findMany({
@@ -53,6 +55,7 @@ export const getAllListDetails = async (req, res) => {
     
   }
 };
+//get single playlist details
 export const getPlayListDetails = async (req, res) => {
    const { playlistId } = req.params;
   try {
@@ -88,6 +91,7 @@ export const getPlayListDetails = async (req, res) => {
     return res.status(500).json({ error: "Error While Fetching Playlist" });
   }
 };
+//add problem to playlist
 export const addProblemToPlaylist = async (req, res) => {
    const {playlistId} = req.params;
     const {problemIds} = req.body;
@@ -119,6 +123,7 @@ export const addProblemToPlaylist = async (req, res) => {
       
     }
 };
+//delete playlist
 export const deletePlaylist = async (req, res) => {
   const { playlistId } = req.params;
   try {
@@ -138,4 +143,33 @@ export const deletePlaylist = async (req, res) => {
     return res.status(500).json({ error: "failed to Deleting Playlist" });
   }
 };
-export const removeProblemFromPlaylist = async (req, res) => {};
+//remove problem from playlist
+export const removeProblemFromPlaylist = async (req, res) => {
+  const { playlistId } = req.params;
+  const { problemIds } = req.body;
+  try {
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or missing ProblemId",
+      });
+    }
+    //check if playlist exists
+    const deleteProblem = await db.problemInPlaylist.deleteMany({
+      where: {
+        playlistId,
+        problemId: {
+          in: problemIds,
+        },
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Problems Removed from Playlist Successfully",
+      deleteProblem,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Error While Removing Problems from Playlist" });
+  }
+};
