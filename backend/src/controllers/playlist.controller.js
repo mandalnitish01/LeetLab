@@ -1,4 +1,5 @@
 import db from "../utils/db.server.js";
+import { deletePlaylist } from './playlist.controller';
 
 export const createPlaylist = async (req, res) => {
   try {
@@ -98,7 +99,7 @@ export const addProblemToPlaylist = async (req, res) => {
           message:"Invalid Problem Ids"
         });
       }
-
+      //check if playlist exists
       const problemsInPlaylist = await db.problemInPlaylist.createMany({
         data:problemIds.map((problemId)=>{
           return {
@@ -118,5 +119,23 @@ export const addProblemToPlaylist = async (req, res) => {
       
     }
 };
-export const deletePlaylist = async (req, res) => {};
+export const deletePlaylist = async (req, res) => {
+  const { playlistId } = req.params;
+  try {
+    const deletePlaylist = await db.playlist.delete({
+      where: {
+        id: playlistId,
+        // userId: req.user.id,
+      },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Playlist Deleted Successfully",
+      deletePlaylist,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "failed to Deleting Playlist" });
+  }
+};
 export const removeProblemFromPlaylist = async (req, res) => {};
