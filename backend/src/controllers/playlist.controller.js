@@ -87,6 +87,36 @@ export const getPlayListDetails = async (req, res) => {
     return res.status(500).json({ error: "Error While Fetching Playlist" });
   }
 };
-export const addProblemToPlaylist = async (req, res) => {};
+export const addProblemToPlaylist = async (req, res) => {
+   const {playlistId} = req.params;
+    const {problemIds} = req.body;
+
+    try {
+      if(!Array.isArray(problemIds)||problemIds.length===0){
+        return res.status(400).json({
+          success:false,
+          message:"Invalid Problem Ids"
+        });
+      }
+
+      const problemsInPlaylist = await db.problemInPlaylist.createMany({
+        data:problemIds.map((problemId)=>{
+          return {
+            playlistId,
+            problemId
+          }
+        })
+      })
+      return res.status(200).json({
+        success:true,
+        message:"Problems Added to Playlist Successfully",
+        problemsInPlaylist
+      })
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Error While Adding Problems to Playlist" });
+      
+    }
+};
 export const deletePlaylist = async (req, res) => {};
 export const removeProblemFromPlaylist = async (req, res) => {};
