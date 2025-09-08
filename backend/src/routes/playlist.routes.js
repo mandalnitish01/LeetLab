@@ -12,4 +12,4 @@ playlistRoutes.post("/:playlistId/add-problem", authMiddleware,addProblemToPlayl
 playlistRoutes.delete("/:playlistId",authMiddleware,deletePlaylist);
 playlistRoutes.delete("/:playlistId/remove-problem",authMiddleware,removeProblemFromPlaylist)
 
-export default playlistRoutes
+export default playlistRoutes   
