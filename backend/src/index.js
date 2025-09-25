@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import cookParser from "cookie-parser";
+import cors from "cors";
 
 
 //imported all routes
@@ -16,6 +17,10 @@ const PORT = process.env.PORT || 8080;
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.use(cors({
+  origin: 'http://localhost:5173', // Replace with your frontend URL
+  credentials: true, // Allow cookies to be sent
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookParser());

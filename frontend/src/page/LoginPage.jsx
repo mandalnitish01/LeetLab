@@ -5,12 +5,14 @@ import { Link } from 'react-router-dom'
 import {Code,Eye,EyeOff,Mail,Loader2,Lock} from 'lucide-react'
 import { z } from 'zod'
 import AuthImagePattern from '../components/AuthImagePattern'
-
+import { useAuthStore } from '../store/useAuthStore';
 const LoginSchema = z.object({
   email:z.string().email("Enter valid email"),
   password:z.string().min(6,"Password must be at least 6 characters"),
 })
 const LoginPage = () => {
+const { isLoggingIn, login} = useAuthStore()
+
   const [showPassword,setShowPassword] = useState(false)
   //                                       after the errors you can put isSubmitting to show loading state
   const{register,handleSubmit,formState:{errors}} = useForm({
@@ -18,8 +20,13 @@ const LoginPage = () => {
   })
 
   //it will be called when form is submitted
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    // console.log(data)
+    try {
+      await login(data)
+    } catch (error) {
+      console.error("Login error", error)
+    }
   }
 
   return (
@@ -100,17 +107,17 @@ const LoginPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-            //  disabled={isSigninUp}
+             disabled={isLoggingIn}
             >
-              Login to your account
-               {/* {isSigninUp ? (
+              {/* Login to your account */}
+               {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
                 </>
               ) : (
-                "Sign in"
-              )} */}
+                "Login"
+              )}
             </button>
           </form>
 

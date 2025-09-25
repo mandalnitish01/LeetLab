@@ -28,7 +28,7 @@ console.log(req.body)
     });
 console.log("Newly created user ",newUser);
     // Generate JWT token
-    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET,
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, //
       { expiresIn: "7d" }
     );
     console.log("Generated JWT token: ", token);

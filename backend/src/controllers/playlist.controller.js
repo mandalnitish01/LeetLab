@@ -1,5 +1,5 @@
-import db from "../utils/db.server.js";
-import { deletePlaylist } from './playlist.controller';
+import {db} from "../libs/db.js";
+
 
 //create playlist
 export const createPlaylist = async (req, res) => {
