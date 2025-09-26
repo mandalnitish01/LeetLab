@@ -124,8 +124,7 @@ ProblemSolved  this project
     │   └── store
     │   │   └── useAuthStore.js
     └── vite.config.js
-└── readme.md ```
-
+└── readme.md
 
 
 
