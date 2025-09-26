@@ -1,3 +1,4 @@
+
 import React from 'react'
 import {Routes, Route, Navigate} from 'react-router-dom'
 import HomePage from './page/HomePage'
@@ -8,6 +9,8 @@ import { useAuthStore } from './store/useAuthStore'
 import { useEffect } from 'react'
 import { Loader } from 'lucide-react'
 import Layout from './layout/Layout'
+import AdminRoute from './components/AdminRoute'
+import AddProblem from './page/Addproblem'
 
 const App = () => {
   // let authUser = null; //logic to check if user is authenticated or not
@@ -44,6 +47,12 @@ const App = () => {
       path='/signup'
       element={!authUser? <SignupPage/> : <Navigate to='/'/>}
       />
+
+      <Route element={<AdminRoute/>}>
+      <Route path='/add-problem'
+      element={authUser? <AddProblem/> : <Navigate to='/login'/>}
+      />
+      </Route>
     </Routes>
   </div>
   )
