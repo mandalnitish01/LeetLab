@@ -1,35 +1,4 @@
-<!-- # LeetLab
-### A Coding Practice Platform
-#### Users can solve listed problems on this platform.
 
-#### Users can view their leaderboard position, score, total solved questions, and rank.
-
-## Technologies and Software Used to Build This Platform
-### Backend
-#### Node.js
-
-#### Express.js – Used to create the server for the website.
-
-#### Prisma – Used as an ORM to interact between the database and the server.
-
-#### PostgreSQL – Used as the SQL-based database (Note: PostgreSQL is not a NoSQL database).
-
-#### bcryptjs – Used to hash (encrypt) user passwords securely.
-
-#### dotenv – Used to configure environment variables in the server using the .env file.
-
-
-### installed
-## install docker and docker compose also install judge0 for validation and check
-
-npx prisma studio
-- These four schema is used in User
-Problem
-Submission
-TestCaseResult
-ProblemSolved  this project
-
-//Backend is completed for my leetlab project. -->
 
 
 ## Let'sCode
@@ -125,27 +94,37 @@ ProblemSolved  this project
     │   │   └── useAuthStore.js
     └── vite.config.js
 └── readme.md
+```
 
 
-
-# 🧰 Tech Stack
+## 🧰 Tech Stack
 Frontend: React.js, Tailwind CSS, Daisy UI
 Backend: Node.js, Express.js
 Database: PostgreSQL
 Compiler Integration: Judge0 API
 
+## 📡 API Endpoints
+```bash
+| Method | Endpoint              | Description                |
+|--------|-----------------------|----------------------------|
+| POST   | `/api/v1/auth/`       | Register a new user        |
+| POST   | `/api/v1/problems`    | User login                 |
+| GET    | `/api/v1/execute-code`| Get all problems           |
+| POST   | `/api/v1/submission`  | Run code using Judge0 API  |
+| GET    | `/api/v1/playlist`    | Fetch user submissions     |
+```
 
 ## 📜 Available Scripts
-
+```bash
 | Script              | Description                           |
 |---------------------|---------------------------------------|
 | `npm run dev`       | Start development server on port 8080 |
 | `npm run build`     | Build for production                  |
 | `npm run build:dev` | Build in development mode             |
 | `npm run preview`   | Preview production build locally      |
+```
 
-
-# 🚀 Installation & Setup
+## 🚀 Installation & Setup
 To get started with LeetLab, follow these steps:
 
 #### Prerequisites
@@ -158,5 +137,16 @@ git clone https://github.com/kreeti1210/LeetLab.git
 cd LeetLab
 npm install
 npm run dev
+```
 
+
+## Future Improvements / Roadmap
+#### 🛠 Future Enhancements
+- Add support for more programming languages  
+- Implement code discussion forums  
+- Add mock interview sessions  
+- Introduce AI-based problem hints  
+
+##  🙏 Acknowledgements
+This journey would not have been possible without the exceptional mentorship and unwavering support from the team at Chai Code — Hitesh Choudhary, Piyush Garg, and Suraj Sir. Their structured approach to learning and emphasis on problem-solving played a pivotal role in shaping my skills and bringing this project to life.
 
