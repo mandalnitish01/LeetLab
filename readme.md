@@ -48,6 +48,7 @@ ProblemSolved  this project
 
 
 ## Folder's and File Structure
+```bash
 ├── backend
     ├── .gitignore
     ├── package-lock.json
@@ -123,7 +124,7 @@ ProblemSolved  this project
     │   └── store
     │   │   └── useAuthStore.js
     └── vite.config.js
-└── readme.md
+└── readme.md ```
 
 
 
